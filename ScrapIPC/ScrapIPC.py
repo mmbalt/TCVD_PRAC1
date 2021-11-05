@@ -6,9 +6,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime as dt
 
 
-def get_ipc_table (url,
-                   table_class ="table tabledat table-striped table-condensed table-hover"
-                   ):
+def get_ipc_table(url,
+                  table_class="table tabledat table-striped table-condensed table-hover"):
 
     """
     The function gets the 'ipc_table' from the url.
@@ -18,10 +17,10 @@ def get_ipc_table (url,
     """
 
     soup = BeautifulSoup(requests.get(url).content)
-    return soup.find('table', {'class' : table_class})
+    return soup.find('table', {'class': table_class})
 
 
-def get_ipc_tbl_header (ipc_table):
+def get_ipc_tbl_header(ipc_table):
     """
     Get the header of the ipc_table.
     """
@@ -29,16 +28,14 @@ def get_ipc_tbl_header (ipc_table):
     headers = ipc_table.thead.find_all('th')
     pattern = r"[a-zA-Z0-9]+"
 
-    table_header = [ 'Empty'  if not (re.findall(pattern, h.contents[0].replace(u'\xa0', u' ')))
-                     else h.contents[0].replace(u'\xa0', u' ')
-                     for h in headers]
-
-    # print(table_header)
+    table_header = ['Empty' if not (re.findall(pattern, h.contents[0].replace(u'\xa0', u' ')))
+                    else h.contents[0].replace(u'\xa0', u' ')
+                    for h in headers]
 
     return table_header
 
 
-def get_ipc_tbl_body (ipc_table, table_body = []):
+def get_ipc_tbl_body(ipc_table, table_body):
     """
     Get body content of the ipc_table. This function gets the rows
     of the resulting dataset and adds them into table_body list.
@@ -47,25 +44,26 @@ def get_ipc_tbl_body (ipc_table, table_body = []):
     for row in ipc_table.tbody.find_all('tr'):
         row_arr = []
         for cell in row.contents:
-            if (cell['class'][0] in {'fecha', 'numero'}):
-                # print(cell.contents[0])
+            if cell['class'][0] in {'fecha', 'numero'}:
                 row_arr.append(cell.contents[0])
         table_body.append(row_arr)
-        # print("=======================")
 
     return table_body
 
 
-def get_ipc_data (first_yr = 1961, last_yr = 2021):
+def get_ipc_data(first_yr=1961, last_yr=2021):
     """
     Main function which scraps the web table in order to build the dataset.
+    :param first_yr: first ipc info year.
+    :param last_yr: last ipc info year.
+    :return: (table_header, table_body).
     """
 
     # URL to get the table header:
     ipc_usa = "https://datosmacro.expansion.com/ipc-paises/usa?sector=IPC+General&sc=IPC-IG"
 
-    ipc_table = get_ipc_table(ipc_usa) # Get first table.
-    table_header = get_ipc_tbl_header(ipc_table) # Get table header.
+    ipc_table = get_ipc_table(ipc_usa)               # Get first table.
+    table_header = get_ipc_tbl_header(ipc_table)     # Get table header.
 
     table_body = []
 
@@ -83,12 +81,14 @@ def get_ipc_data (first_yr = 1961, last_yr = 2021):
             continue
 
     print("--Finished--")
-    return (table_header, table_body)
+    return table_header, table_body
 
 
-def correctDate(adate):
+def correct_date(adate):
     """
-    TODO DOC
+    The function does preprocessing over date objects of the dataset.
+    :param adate: raw object with date.
+    :return: date object.
     """
     m_names_num = {'Enero': 1, 'Febrero': 2, 'Marzo': 3,
                    'Abril': 4, 'Mayo': 5, 'Junio': 6,
@@ -97,11 +97,10 @@ def correctDate(adate):
 
     month, year = (m_names_num[adate.split(' ')[0]], int(adate.split(' ')[1]))
 
-    # dt.strptime(str(year) + str(month), "%Y%b")
     return dt(year, month, 1)
 
 
-def fill_missed_years (ipc_dict, min_yr, max_yr):
+def fill_missed_years(ipc_dict, min_yr, max_yr):
 
     expected = set(range(min_yr, max_yr + 1))
     had = set(ipc_dict.keys())
@@ -116,9 +115,12 @@ def fill_missed_years (ipc_dict, min_yr, max_yr):
     return ipc_dict
 
 
-def getYearFactorDict(first_year, last_year):
+def get_year_factor_dict(first_year, last_year):
     """
-    TODO DOC
+    Calculates the gross correction factors according to the year.
+    :param first_year:
+    :param last_year:
+    :return: year_factor_dict
     """
     (table_header, table_body) = get_ipc_data(first_year, last_year)
 
@@ -129,7 +131,7 @@ def getYearFactorDict(first_year, last_year):
     df.drop_duplicates(inplace=True)
 
     # Date columns:
-    df['date'] = df['Empty'].apply(lambda x: correctDate(x))
+    df['date'] = df['Empty'].apply(lambda x: correct_date(x))
     df['anho'] = df['date'].dt.year
     df['mes'] = df['date'].dt.month
 
@@ -159,9 +161,6 @@ def getYearFactorDict(first_year, last_year):
     # get year vs factor dictionary:
     year_factor_dict = da[['anho', 'factor']].set_index('anho').to_dict()['factor']
 
-    year_factor_dict = fill_missed_years (year_factor_dict, first_year, last_year)
+    year_factor_dict = fill_missed_years(year_factor_dict, first_year, last_year)
 
     return year_factor_dict
-
-
-

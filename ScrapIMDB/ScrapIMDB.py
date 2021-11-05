@@ -1,11 +1,16 @@
 import requests
-import re
+# import re
 import pandas as pd
 from bs4 import BeautifulSoup
-from datetime import datetime as dt
+# from datetime import datetime as dt
 
 
-def getTitle(store):
+def get_title(store):
+    """
+    Gets the title of the movie
+    :param store: bs4 tag object which contents the movie data.
+    :return: title of the movie
+    """
     try:
         title = store.h3.a.text
     except Exception as e:
@@ -15,7 +20,12 @@ def getTitle(store):
         return title
 
 
-def getRanking(store):
+def get_ranking(store):
+    """
+    Gets movie ranking.
+    :param store: bs4 tag object which contents the movie data.
+    :return: x_ranking.
+    """
     try:
         r_class = 'lister-item-index unbold text-primary'
         x_ranking = store.h3.find('span', class_=r_class) \
@@ -27,7 +37,12 @@ def getRanking(store):
         return x_ranking
 
 
-def getYear(store):
+def get_year(store):
+    """
+    Gets movie year.
+    :param store: bs4 tag object which contents the movie data.
+    :return: movie_year.
+    """
     try:
         m_class = 'lister-item-year text-muted unbold'
         movie_year = store.h3.find('span', class_=m_class) \
@@ -39,7 +54,12 @@ def getYear(store):
         return movie_year
 
 
-def getTime(store):
+def get_time(store):
+    """
+    Gets movie runtime.
+    :param store: bs4 tag object which contents the movie data.
+    :return: runtime.
+    """
     try:
         runtime = store.p.find('span', class_='runtime') \
             .text.replace(' min', '').strip()
@@ -50,7 +70,12 @@ def getTime(store):
         return runtime
 
 
-def getGenre(store):
+def get_genre(store):
+    """
+    Gets movie genre.
+    :param store: bs4 tag object which contents the movie data.
+    :return: x_genre.
+    """
     try:
         x_genre = store.p.find('span', class_='genre') \
             .text.replace('\n', '').strip()
@@ -61,7 +86,12 @@ def getGenre(store):
         return x_genre
 
 
-def getMetascore(store):
+def get_metascore(store):
+    """
+    Gets movie metascore.
+    :param store: bs4 tag object which contents the movie data.
+    :return: meta
+    """
     try:
         meta = store.find('span', class_='metascore') \
             .text.replace(' ', '').strip()
@@ -72,7 +102,12 @@ def getMetascore(store):
         return meta
 
 
-def getRate(store):
+def get_rate(store):
+    """
+    Gets movie rate
+    :param store: bs4 tag object which contents the movie data.
+    :return: rate.
+    """
     try:
         rate = store.find('div', class_='inline-block ratings-imdb-rating') \
             .text.replace('\n', '')
@@ -83,7 +118,12 @@ def getRate(store):
         return rate
 
 
-def getSinopsis(store):
+def get_sinopsis(store):
+    """
+    Gets movie sinopsis.
+    :param store: bs4 tag object which contents the movie data.
+    :return: sin_x
+    """
     try:
         sin_x = store.find('div', class_='inline-block ratings-imdb-rating') \
             .text.replace('\n', '')
@@ -94,7 +134,12 @@ def getSinopsis(store):
         return sin_x
 
 
-def getDirectors(store):
+def get_directors(store):
+    """
+    Gets the movie directors.
+    :param store: bs4 tag object which contents the movie data.
+    :return: directors.
+    """
     try:
         directors = store.find("p", {"class": ""}).text.replace('\n', '') \
             .strip().split("|")[0]
@@ -105,7 +150,12 @@ def getDirectors(store):
         return directors
 
 
-def getStars(store):
+def get_stars(store):
+    """
+    Gets the movie main actors.
+    :param store: bs4 tag object which contents the movie data.
+    :return: stars.
+    """
     try:
         stars = store.find("p", {"class": ""}).text.replace('\n', '') \
             .strip().split("|")[1]
@@ -116,7 +166,14 @@ def getStars(store):
         return stars
 
 
-def appendVotesAndGross(store, votes, gross):
+def append_votes_and_gross(store, votes, gross):
+    """
+    Gets the votes and gross.
+    :param store: bs4 tag object which contents the movie data.
+    :param votes: votes list.
+    :param gross: gross list.
+    :return: (votes, gross)
+    """
     value = store.find_all('span', attrs={'name': 'nv'})
     vote = value[0].text
     votes.append(vote)
@@ -126,7 +183,12 @@ def appendVotesAndGross(store, votes, gross):
     return (votes, gross)
 
 
-def scrapPage(url):
+def scrap_page(url):
+    """
+    This function scraps the page indicated in the url. It must be the url of an IMDB list.
+    :param url: bs4 tag object which contents the movie data.
+    :return df_page: scraped page data in a dataframe.
+    """
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -139,7 +201,6 @@ def scrapPage(url):
     rating = []
     metascore = []
     sinopsis = []
-    # cast=[]
     directors = []
     stars = []
     votes = []
@@ -149,27 +210,27 @@ def scrapPage(url):
     movie_data = soup.findAll('div', attrs={'class': 'lister-item-content'})
 
     for store in movie_data:
-        movie_title.append(getTitle(store))
+        movie_title.append(get_title(store))
 
-        ranking.append(getRanking(store))
+        ranking.append(get_ranking(store))
 
-        year.append(getYear(store))
+        year.append(get_year(store))
 
-        time.append(getTime(store))
+        time.append(get_time(store))
 
-        genre.append(getGenre(store))
+        genre.append(get_genre(store))
 
-        metascore.append(getMetascore(store))
+        metascore.append(get_metascore(store))
 
-        rating.append(getRate(store))
+        rating.append(get_rate(store))
 
-        sinopsis.append(getSinopsis(store))
+        sinopsis.append(get_sinopsis(store))
 
-        directors.append(getDirectors(store))
+        directors.append(get_directors(store))
 
-        stars.append(getStars(store))
+        stars.append(get_stars(store))
 
-        appendVotesAndGross(store, votes, gross)
+        append_votes_and_gross(store, votes, gross)
 
     df_page = pd.DataFrame({'Title': movie_title,
                             'Release Year': year,
@@ -186,7 +247,12 @@ def scrapPage(url):
     return df_page
 
 
-def getNextUrl(actual_url):
+def get_next_url(actual_url):
+    """
+    The function gets the url of the next page to scrap.
+    :param actual_url: bs4 tag object which contents the movie data.
+    :return:
+    """
     response = requests.get(actual_url)
     soup = BeautifulSoup(response.content, 'html.parser')
     url = 'https://www.imdb.com' \
@@ -195,29 +261,38 @@ def getNextUrl(actual_url):
     return url
 
 
-def getMoviesDataframe():
+def get_movies_dataframe():
+    """
+    The function scraps the IMDB website  in order to get data from sci-fi movies.
+    :return: dataframe with the movies data.
+    """
     finish = False
     url = 'https://www.imdb.com/search/title/'\
           + '?title_type=feature&num_votes=1000,&genres=sci-fi&sort=boxoffice_gross_us,desc'
 
-    df = scrapPage(url)
+    df = scrap_page(url)
 
-    while not (finish):
+    while not finish:
         # Try to get next url:
         try:
-            url = getNextUrl(url)
+            url = get_next_url(url)
         except Exception as e:
             print(e)
             finish = True
             break
 
         print(url)
-        df = pd.concat([df, scrapPage(url)])
+        df = pd.concat([df, scrap_page(url)])
 
     return df.copy()
 
 
-def correctGross(value):
+def correct_gross(value):
+    """
+    The function does preprocessing on movie gross data.
+    :param value:
+    :return:
+    """
     value = value.replace('$', '')
     if value.find('M') != -1:
         value = value.replace('M', '')
