@@ -19,6 +19,6 @@ The code may stop working because changes on the structure of the sracpped webpa
 
 
 ## License
-The lincese of the code is indicated on the LICENSE.md file of the repository.
-The license of the dataset is indicated [here](https://zenodo.org/record/5650109#.YYZ6OrqCF1I). You can also find the obtained dataset there.
+* The lincese of the code is indicated on the LICENSE.md file of the repository.
+* The license of the dataset is indicated [here](https://zenodo.org/record/5650109#.YYZ6OrqCF1I). You can also find the obtained dataset there.
 
