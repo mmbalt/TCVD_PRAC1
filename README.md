@@ -5,7 +5,7 @@ The code of this repository has been made to meet the objectives of <Practice 1>
 The code is divided in three files:
 * main.py : main file which calls the functions to scrap the webpages and generate the dataset.
 * ScrapIPC.py : file which contains the functions to get the USA IPC data from [datosmacro](https://datosmacro.expansion.com/) site.
-* ScrapIMDB.py : file which contains the functions to get the Sci-Fi movies data from [IMDB](https://www.imdb.com/) site.
+* ScrapIMDB.py : file which contains the functions to get the Sci-Fi movie data from [IMDB](https://www.imdb.com/) site.
 
 
 ## Usage:
