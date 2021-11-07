@@ -9,9 +9,9 @@ The code is divided in three files:
 
 
 ## Usage:
-Once the repository is pulled the code can be executed in a terminal running on the project folder with `python main.py`.
+Once the repository is pulled you can check the requirements.txt file to ensure you have the needed libraries installed. You can use `pip install requirements.txt` to install them. Then you must be able to execute the code using a terminal running on the project folder with `python main.py`.
 
-The program will start scrapping the webpages for a few minutes. After that it will build the dataset with the scrapped data into a folder `./data/` and print --Finished-- on the console when its done. The name of the data file will be `sciFiMovies_dataset.csv` which is a csv file using ';' as separator.
+The program will start scrapping the webpages for a few minutes. After that it will build the dataset with the scrapped data into a folder `./data/` and print *--Finished--* on the console when its done. The name of the generated dataset will be `sciFiMovies_dataset.csv` which is a *csv* file that uses ';' as separator.
 
 
 ## Issues:
