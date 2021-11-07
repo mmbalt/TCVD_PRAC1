@@ -26,3 +26,6 @@ Signatures:
 - Xavier Martínez Bartra
 - Martín Martínez Baltar
 
+Enlace video presentación:
+https://drive.google.com/file/d/1vtGCPtec45EH6ail7wU_fqxbFH8XZcf5/view
+
