@@ -20,7 +20,7 @@ The code may stop working because changes on the structure of the sracpped webpa
 
 ## License
 * The licese of the code is indicated in the LICENSE file of the repository.
-* The license of the dataset is indicated [here](https://zenodo.org/record/5650109#.YYZ6OrqCF1I). You can also find the obtained dataset there.
+* The license of the dataset is indicated [here](https://zenodo.org/record/5653247#.YYj8i7qCFhE). You can also find the obtained dataset there.
 
 Signatures: 
 - Xavier Martínez Bartra
