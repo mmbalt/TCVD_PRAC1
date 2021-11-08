@@ -125,8 +125,7 @@ def get_sinopsis(store):
     :return: sin_x
     """
     try:
-        sin_x = store.find('div', class_='inline-block ratings-imdb-rating') \
-            .text.replace('\n', '')
+        sin_x= store.find_all("p", {"class":  "text-muted"})[1].text.replace('\n', '')
     except Exception as e:
         print(e)
         sin_x = None
@@ -141,8 +140,7 @@ def get_directors(store):
     :return: directors.
     """
     try:
-        directors = store.find("p", {"class": ""}).text.replace('\n', '') \
-            .strip().split("|")[0]
+        directors = store.find("p", {"class": ""}).text.replace('\n', '') .strip().split("|")[0]
     except Exception as e:
         print(e)
         directors = None

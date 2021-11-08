@@ -101,7 +101,13 @@ def correct_date(adate):
 
 
 def fill_missed_years(ipc_dict, min_yr, max_yr):
-
+    """
+    Fills missing years values on ipc_dict .
+    :param ipc_dict is a dict with the form {year:factor}.
+    :param min_yr.
+    :param max_yr.
+    :return: ipc_dict.
+    """
     expected = set(range(min_yr, max_yr + 1))
     had = set(ipc_dict.keys())
     missed = expected - had
